@@ -26,9 +26,9 @@ func getNextRow() []int {
 }
 
 func fillMatrix(n int) [][]int {
-	square := make([][]int, n)
+	square := [][]int{}
 	for line := 0; line < 2*n; line++ {
-		square[line] = getNextRow()
+		square = append(square, getNextRow())
 	}
 	return square
 }
@@ -36,15 +36,37 @@ func fillMatrix(n int) [][]int {
 func runGame() {
 	var n = readNumber(reader)
 	var matrix = fillMatrix(n)
-	var changed = false
-	var currentSum = SumTopCorner(matrix)
+	var currentSum = sumTopCorner(matrix)
 	for true {
-		fmt.Println(changed, currentSum)
+		var changed = false
+		for rowIndex, _ := range matrix {
+			flipRow(matrix, rowIndex)
+			var newSum int = sumTopCorner(matrix)
+			if newSum > currentSum {
+				changed = true
+				currentSum = newSum
+			} else {
+				flipRow(matrix, rowIndex)
+			}
+		}
+		for columnIndex, _ := range matrix {
+			flipColumn(matrix, columnIndex)
+			var newSum int = sumTopCorner(matrix)
+			if newSum > currentSum {
+				changed = true
+				currentSum = newSum
+			} else {
+				flipRow(matrix, columnIndex)
+			}
+		}
+		if changed == false {
+			break
+		}
 	}
-	fmt.Println(matrix)
+	fmt.Println(currentSum)
 }
 
-func SumTopCorner(square [][]int) int {
+func sumTopCorner(square [][]int) int {
 	var length = len(square)
 	var sum int = 0
 	for i := 0; i < length/2; i++ {
@@ -55,15 +77,15 @@ func SumTopCorner(square [][]int) int {
 	return sum
 }
 
-func flipRow(row []int) []int {
-	var capacity int = cap(row)
+func flipRow(square [][]int, rowIndex int) [][]int {
+	var capacity int = len(square)
 	for i := 0; i < capacity/2; i++ {
 		var oppositeIndex int = capacity - i - 1
-		var temp = row[i]
-		row[i] = row[oppositeIndex]
-		row[oppositeIndex] = temp
+		var temp = square[rowIndex][i]
+		square[rowIndex][i] = square[rowIndex][oppositeIndex]
+		square[rowIndex][oppositeIndex] = temp
 	}
-	return row
+	return square
 }
 
 func flipColumn(square [][]int, columnIndex int) [][]int {
@@ -85,5 +107,4 @@ func main() {
 	for i := 0; i < numberOfProblems; i++ {
 		runGame()
 	}
-	fmt.Println("vim-go")
 }

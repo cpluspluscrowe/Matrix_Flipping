@@ -7,16 +7,16 @@ import (
 
 func TestSumTopCorner(t *testing.T) {
 	square := [][]int{{1, 2}, {3, 4}}
-	var sum = SumTopCorner(square)
+	var sum = sumTopCorner(square)
 	if sum != 1 {
 		t.Errorf("Sum should be 1, but was %d", sum)
 	}
 }
 
 func TestFlipRow(t *testing.T) {
-	row := []int{1, 2, 3}
-	var flipped = flipRow(row)
-	if flipped[0] != 3 && flipped[1] != 2 && flipped[2] != 3 {
+	square := [][]int{{1, 2}, {3, 4}}
+	var flipped = flipRow(square, 1)
+	if flipped[1][0] != 4 || flipped[1][1] != 3 {
 		t.Errorf("Row flip was unsuccessful")
 	}
 }
