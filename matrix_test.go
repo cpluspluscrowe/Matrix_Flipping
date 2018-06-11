@@ -29,3 +29,12 @@ func TestFlipColumn(t *testing.T) {
 		t.Errorf("Column flip was unsuccessful")
 	}
 }
+
+func TestFlipColumn2(t *testing.T) {
+	square := [][]int{{1, 2, 3}, {4, 5, 6}, {7, 8, 9}}
+	var flipped = flipColumn(square, 1)
+	fmt.Println(square)
+	if flipped[0][1] != 8 || flipped[1][1] != 5 || flipped[2][1] != 2 {
+		t.Errorf("Column flip was unsuccessful")
+	}
+}

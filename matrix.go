@@ -33,37 +33,46 @@ func fillMatrix(n int) [][]int {
 	return square
 }
 
+func getCorner(square [][]int) [][]int {
+	var n = len(square) / 2
+	maxValues := [][]int{}
+	for line := 0; line < n; line++ {
+		maxValues = append(maxValues, make([]int, n))
+	}
+	return maxValues
+}
+
+func GetMaxValueFromList(list []int) int {
+	var max = -100000
+	for _, value := range list {
+		if value > max {
+			max = value
+		}
+	}
+	return max
+}
+
+func GetMaxQuadrant(row int, column int, square [][]int) int {
+	var lastIndex = len(square) - 1
+	var quadrantValues []int
+	quadrantValues = append(quadrantValues, square[row][column])
+	quadrantValues = append(quadrantValues, square[row][lastIndex-column])
+	quadrantValues = append(quadrantValues, square[lastIndex-row][column])
+	quadrantValues = append(quadrantValues, square[lastIndex-row][lastIndex-column])
+	return GetMaxValueFromList(quadrantValues)
+}
+
 func runGame() {
 	var n = readNumber(reader)
 	var matrix = fillMatrix(n)
-	var currentSum = sumTopCorner(matrix)
-	for true {
-		var changed = false
-		for rowIndex, _ := range matrix {
-			flipRow(matrix, rowIndex)
-			var newSum int = sumTopCorner(matrix)
-			if newSum > currentSum {
-				changed = true
-				currentSum = newSum
-			} else {
-				flipRow(matrix, rowIndex)
-			}
-		}
-		for columnIndex, _ := range matrix {
-			flipColumn(matrix, columnIndex)
-			var newSum int = sumTopCorner(matrix)
-			if newSum > currentSum {
-				changed = true
-				currentSum = newSum
-			} else {
-				flipRow(matrix, columnIndex)
-			}
-		}
-		if changed == false {
-			break
+	var sum = 0
+	for i := 0; i < n; i++ {
+		for j := 0; j < n; j++ {
+			sum += GetMaxQuadrant(i, j, matrix)
 		}
 	}
-	fmt.Println(currentSum)
+
+	fmt.Println(sum)
 }
 
 func sumTopCorner(square [][]int) int {
